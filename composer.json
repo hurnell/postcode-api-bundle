@@ -1,0 +1,32 @@
+{
+	"name": "hurnell/postcode-api-bundle",
+	"description": "Symfony 4 bundle for postcodeapi.nu",
+	"type": "symfony-bundle",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Nigel Hurnell",
+			"email": "n.hurnell@gmail.com"
+		}
+	],
+	"require": {
+		"php": "^7.1.3",
+		"ext-json": "*",
+		"galbar/jsonpath": "^1.0",
+		"guzzlehttp/guzzle": "^6.0",
+		"symfony/http-foundation": "^4.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Hurnell\\PostcodeApiBundle\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Hurnell\\PostcodeApiBundle\\Tests\\": "tests/"
+		}
+	},
+	"require-dev": {
+		"symfony/phpunit-bridge": "^4.2"
+	}
+}
