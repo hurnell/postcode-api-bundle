@@ -13,17 +13,17 @@ Search based on postcode, house number AND house number extra. Note that some co
 3. Create yaml configuration config/packages/hurnell_postcode_api.yaml with reference to your api_key.
 
 ### 1 - Download via composer
-```
+```bash
 composer require hurnell/postcode-api-bundle:*
 ```
 ### 2 - Enable bundle
-```
+```php
 # config/bundles.php
 
 Hurnell\PostcodeApiBundle\HurnellPostcodeApiBundle::class => ['all' => true],
 ```
 ### 3 - Configure with API key
-```
+```yaml
 # config/packages/hurnell_postcode_api.yaml
 
 hurnell_postcode_api:
@@ -33,7 +33,9 @@ hurnell_postcode_api:
 ## Usage
 
 Autowiring is enabled by default so in a controller action (or constructor of other classes)
-```
+```php
+<?php
+
 use Hurnell\PostcodeApiBundle\Service\PostcodeApiClient;
 // use Exception classes
 
