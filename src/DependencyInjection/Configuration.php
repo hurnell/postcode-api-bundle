@@ -10,13 +10,15 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
 
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('hurnell_postcode_api');
+        $treeBuilder = new TreeBuilder('hurnell_postcode_api');
+        $rootNode = $treeBuilder->getRootNode();
         $rootNode
             ->children()
-            ->scalarNode('api_key')->isRequired()->info('You\'re postcodeapi.nu api key')->end()
+            ->scalarNode('api_key')
+            ->isRequired()
+            ->info('You\'re postcodeapi.nu api key')->end()
             ->end();
 
         return $treeBuilder;
