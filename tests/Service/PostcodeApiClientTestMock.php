@@ -2,7 +2,6 @@
 
 namespace Hurnell\PostcodeApiBundle\Tests\Service;
 
-use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ConnectException;
 use Psr\Http\Message\RequestInterface;
 use PHPUnit\Framework\TestCase;

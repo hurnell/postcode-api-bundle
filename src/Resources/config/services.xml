@@ -5,11 +5,11 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="guzzle_http.client" class="GuzzleHttp\Client"/>
         <service id="hurnell_postcode_api.service.postcode_api_client"
-                 class="Hurnell\PostcodeApiBundle\Service\PostcodeApiClient">
+                 class="Hurnell\PostcodeApiBundle\Service\PostcodeApiClient" public="true">
             <argument type="service" id="guzzle_http.client"/>
         </service>
+        <service id="guzzle_http.client" class="GuzzleHttp\Client" public="false"/>
         <service id="Hurnell\PostcodeApiBundle\Service\PostcodeApiClient"
                  alias="hurnell_postcode_api.service.postcode_api_client"/>
     </services>

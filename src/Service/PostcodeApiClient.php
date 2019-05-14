@@ -57,7 +57,7 @@ class PostcodeApiClient
      * @param ClientInterface $client
      * @param string $apiKey
      */
-    public function __construct(ClientInterface $client = null, string $apiKey = '')
+    public function __construct(ClientInterface $client = null, string $apiKey )
     {
         $this->client = $client;
         $this->apiKey = $apiKey;
