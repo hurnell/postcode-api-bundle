@@ -24,6 +24,7 @@ matrix:
             # Test the latest stable release1
         - php: 7.1
         - php: 7.2
+        - php: 7.3
           env: COVERAGE=true PHPUNIT_FLAGS="-v --coverage-text"
 
             # Test LTS versions. This makes sure we do not use Symfony packages with version greater
@@ -32,7 +33,7 @@ matrix:
         #  env: DEPENDENCIES="symfony/lts:^3"
 
             # Latest commit to master
-        - php: 7.2
+        - php: 7.3
           env: STABILITY="dev"
 
     allow_failures:
