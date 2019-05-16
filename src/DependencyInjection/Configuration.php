@@ -13,7 +13,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('hurnell_postcode_api');
-        $rootNode = $treeBuilder->getRootNode();
+        $rootNode = $treeBuilder->root('hurnell_postcode_api');
         $rootNode
             ->children()
             ->scalarNode('api_key')
