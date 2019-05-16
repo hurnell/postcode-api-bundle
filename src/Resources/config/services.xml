@@ -8,9 +8,9 @@
                  class="Hurnell\PostcodeApiBundle\Service\PostcodeApiClient" public="true">
             <argument type="service" id="guzzle_http.client"/>
         </service>
-        <service id="guzzle_http.client" class="GuzzleHttp\Client" public="false"/>
         <service id="Hurnell\PostcodeApiBundle\Service\PostcodeApiClient"
                  alias="hurnell_postcode_api.service.postcode_api_client"/>
+        <service id="guzzle_http.client" class="GuzzleHttp\Client" public="false"/>
     </services>
 </container>
 
