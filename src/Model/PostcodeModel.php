@@ -39,14 +39,16 @@ class PostcodeModel
 
     public function setParam(string $name, $value): void
     {
-        if (property_exists($this, $name)) {
-            $this->$name = $value;
+        $setter = 'set' . ucfirst($name);
+        if (method_exists($this, $setter)) {
+            $this->$setter($value);
         }
     }
+
     /**
      * @return string
      */
-    public function getStreet(): string
+    public function getStreet(): ?string
     {
         return $this->street;
     }
@@ -62,7 +64,7 @@ class PostcodeModel
     /**
      * @return int
      */
-    public function getNumber(): int
+    public function getNumber(): ?int
     {
         return $this->number;
     }
@@ -78,7 +80,7 @@ class PostcodeModel
     /**
      * @return string
      */
-    public function getExtra(): string
+    public function getExtra(): ?string
     {
         return $this->extra;
     }
@@ -94,7 +96,7 @@ class PostcodeModel
     /**
      * @return string
      */
-    public function getPostcode(): string
+    public function getPostcode(): ?string
     {
         return $this->postcode;
     }
@@ -110,7 +112,7 @@ class PostcodeModel
     /**
      * @return string
      */
-    public function getCity(): string
+    public function getCity(): ?string
     {
         return $this->city;
     }
@@ -126,7 +128,7 @@ class PostcodeModel
     /**
      * @return string
      */
-    public function getProvince(): string
+    public function getProvince(): ?string
     {
         return $this->province;
     }
@@ -142,7 +144,7 @@ class PostcodeModel
     /**
      * @return array
      */
-    public function getGeoCoordinates(): array
+    public function getGeoCoordinates(): ?array
     {
         return $this->geoCoordinates;
     }
@@ -152,7 +154,19 @@ class PostcodeModel
      */
     public function setGeoCoordinates(array $geoCoordinates): void
     {
-        $this->geoCoordinates = $geoCoordinates;
+        if (is_array($geoCoordinates) && count($geoCoordinates) === 2) {
+            $this->geoCoordinates = array_combine(['latitude', 'longitude'], $geoCoordinates);
+        }
+    }
+
+    public function getFlattenedGeoCoordinates(): string
+    {
+        $flat = '';
+        if (is_array($this->geoCoordinates) && count($this->geoCoordinates) === 2) {
+            /* note that using %s instead of %f avoids precision errors */
+            return sprintf('%s,%s', $this->geoCoordinates['longitude'], $this->geoCoordinates['latitude']);
+        }
+        return $flat;
     }
 
     /**

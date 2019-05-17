@@ -241,6 +241,7 @@ class PostcodeApiClientTest extends PostcodeApiClientTestMock
      * does return a valid postcode model
      *
      * @param array $params
+     * @param $flattenedGeoCoordinates
      * @param $dummyResponseFile
      * @throws InvalidApiResponseException
      * @throws InvalidHouseNumberException
@@ -250,6 +251,7 @@ class PostcodeApiClientTest extends PostcodeApiClientTestMock
      */
     public function testValidPostcodeNumberAndExtraReturnValidPostcodeModel(
         array $params,
+        $flattenedGeoCoordinates,
         $dummyResponseFile
     ): void
     {
@@ -269,7 +271,16 @@ class PostcodeApiClientTest extends PostcodeApiClientTestMock
         foreach ($params as $key => $value) {
             $this->assertArrayHasKey($key, $modelArray);
             $this->assertEquals($value, $modelArray[$key]);
+            $getter = $this->getGetter($key);
+            $this->assertSame($model->$getter(), $value);
         }
+        $this->assertSame($flattenedGeoCoordinates, $model->getFlattenedGeoCoordinates());
+        $this->assertJson($model->toJson());
+    }
+
+    private function getGetter($param): string
+    {
+        return 'get' . ucfirst($param);
     }
 
     /**
@@ -284,32 +295,44 @@ class PostcodeApiClientTest extends PostcodeApiClientTestMock
                 'extra' => 'RD',
                 'postcode' => '2011XC',
                 'city' => 'Haarlem',
-                'province' => 'Noord-Holland'
-            ], 'response_postcode_extra.json'],
+                'province' => 'Noord-Holland',
+                'geoCoordinates' => ['latitude' => 4.6297726, 'longitude' => 52.3778291]
+            ],
+                '52.3778291,4.6297726',
+                'response_postcode_extra.json'],
             [[
                 'street' => 'Doelstraat',
                 'number' => 20,
                 'extra' => 'ZW',
                 'postcode' => '2011XC',
                 'city' => 'Haarlem',
-                'province' => 'Noord-Holland'
-            ], 'response_postcode_extra.json'],
+                'province' => 'Noord-Holland',
+                'geoCoordinates' => ['latitude' => 4.6297934, 'longitude' => 52.3778686]
+            ],
+                '52.3778686,4.6297934',
+                'response_postcode_extra.json'],
             [[
                 'street' => 'Doelstraat',
                 'number' => 20,
                 'extra' => 'A',
                 'postcode' => '2011XC',
                 'city' => 'Haarlem',
-                'province' => 'Noord-Holland'
-            ], 'response_postcode_extra.json'],
+                'province' => 'Noord-Holland',
+                'geoCoordinates' => ['latitude' => 4.6298598, 'longitude' => 52.3778527]
+            ],
+                '52.3778527,4.6298598',
+                'response_postcode_extra.json'],
             [[
                 'street' => 'Krokusstraat',
                 'number' => 40,
                 'extra' => '',
                 'postcode' => '2015AG',
                 'city' => 'Haarlem',
-                'province' => 'Noord-Holland'
-            ], 'response_postcode_no_extra.json'],
+                'province' => 'Noord-Holland',
+                'geoCoordinates' => ['latitude' => 4.6175105, 'longitude' => 52.3844158]
+            ],
+                '52.3844158,4.6175105',
+                'response_postcode_no_extra.json'],
         ];
     }
 }
