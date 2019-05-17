@@ -1,6 +1,6 @@
 
 
-[![Build Status](https://travis-ci.org/hurnell/postcode-api-bundle.svg?branch=master)](https://travis-ci.org/hurnell/postcode-api-bundle) [![Coverage Status](https://coveralls.io/repos/github/hurnell/postcode-api-bundle/badge.svg)](https://coveralls.io/github/hurnell/postcode-api-bundle) [![GitHub](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hurnell/postcode-api-bundle/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/hurnell/postcode-api-bundle.svg?branch=master)](https://travis-ci.org/hurnell/postcode-api-bundle) [![Coverage Status](https://coveralls.io/repos/github/hurnell/postcode-api-bundle/badge.svg)](https://coveralls.io/github/hurnell/postcode-api-bundle) [![License](https://poser.pugx.org/hurnell/postcode-api-bundle/license)](https://packagist.org/packages/hurnell/postcode-api-bundle) [![Latest Stable Version](https://poser.pugx.org/hurnell/postcode-api-bundle/v/stable)](https://packagist.org/packages/hurnell/postcode-api-bundle)
 
 # postcode-api-bundle
 
