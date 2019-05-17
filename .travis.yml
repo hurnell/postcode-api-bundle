@@ -15,19 +15,15 @@ matrix:
     include:
         # Minimum supported dependencies with the latest and oldest PHP version
         - php: 7.3
-          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak_vendors"
         - php: 7.2
-          env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak_vendors"
         - php: 7.1
           env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" SYMFONY_DEPRECATIONS_HELPER="weak_vendors"
 
             # Test the latest stable release1
         - php: 7.1
-          env: COVERAGE=true PHPUNIT_FLAGS="-v --coverage-text --coverage-clover build/logs/clover.xml"
         - php: 7.2
-          env: COVERAGE=true PHPUNIT_FLAGS="-v --coverage-text --coverage-clover build/logs/clover.xml"
         - php: 7.3
-          env: COVERAGE=true PHPUNIT_FLAGS="-v --coverage-text --coverage-clover build/logs/clover.xml"
+          env: COVERAGE=true PHPUNIT_FLAGS="-v --coverage-text"
 
             # Test LTS versions. This makes sure we do not use Symfony packages with version greater
             # do not test for 3.4
@@ -51,18 +47,9 @@ install:
     # To be removed when this issue will be resolved: https://github.com/composer/composer/issues/5355
     - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --prefer-dist --no-interaction --prefer-stable --quiet; fi
     - composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
-    - ./vendor/bin/simple-phpunit install
-    - composer require php-coveralls/php-coveralls  --dev
-
-before_script:
-    - mkdir -p build/logs
-    - composer install
 
 script:
     - composer validate --strict --no-check-lock
     # simple-phpunit is the PHPUnit wrapper provided by the PHPUnit Bridge component and
     # it helps with testing legacy code and deprecations (composer require symfony/phpunit-bridge)
-    - ./vendor/bin/simple-phpunit $PHPUNIT_FLAGS
-
-after_success:
-    - php vendor/bin/coveralls -v
+    - ./vendor/bin/phpunit $PHPUNIT_FLAGS
