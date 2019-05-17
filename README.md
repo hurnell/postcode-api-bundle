@@ -1,9 +1,10 @@
 
+
+[![Build Status](https://travis-ci.org/hurnell/postcode-api-bundle.svg?branch=master)](https://travis-ci.org/hurnell/postcode-api-bundle) [![Coverage Status](https://coveralls.io/repos/github/hurnell/postcode-api-bundle/badge.svg)](https://coveralls.io/github/hurnell/postcode-api-bundle) [![GitHub](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hurnell/postcode-api-bundle/blob/master/LICENSE)
+
 # postcode-api-bundle
 
 A Symfony 4 bundle to access Dutch postcode API at [Postcode API (postcodeapi.nu)](https://www.postcodeapi.nu/).
-
-[![Build Status](https://travis-ci.org/hurnell/postcode-api-bundle.svg?branch=master)](https://travis-ci.org/hurnell/postcode-api-bundle) [![Coverage Status](https://coveralls.io/repos/github/hurnell/postcode-api-bundle/badge.svg)](https://coveralls.io/github/hurnell/postcode-api-bundle) [![GitHub](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/hurnell/postcode-api-bundle/blob/master/LICENSE)
 
 ## Characteristics/Requirements
 Search based on postcode, house number AND house number extra. Note that some combinations of postcode and house number require a house number extra and without this extra value the address does NOT EXIST:
