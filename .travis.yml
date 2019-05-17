@@ -23,7 +23,7 @@ matrix:
         - php: 7.1
         - php: 7.2
         - php: 7.3
-          env: COVERAGE=true PHPUNIT_FLAGS="-v --coverage-text"
+          env: COVERAGE=true PHPUNIT_FLAGS="-v --coverage-clover build/logs/clover.xml"
 
             # Test LTS versions. This makes sure we do not use Symfony packages with version greater
             # do not test for 3.4
@@ -46,10 +46,18 @@ before_install:
 install:
     # To be removed when this issue will be resolved: https://github.com/composer/composer/issues/5355
     - if [[ "$COMPOSER_FLAGS" == *"--prefer-lowest"* ]]; then composer update --prefer-dist --no-interaction --prefer-stable --quiet; fi
+    - composer require php-coveralls/php-coveralls
     - composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
+
+before_script:
+    - mkdir -p build/logs
 
 script:
     - composer validate --strict --no-check-lock
     # simple-phpunit is the PHPUnit wrapper provided by the PHPUnit Bridge component and
     # it helps with testing legacy code and deprecations (composer require symfony/phpunit-bridge)
     - ./vendor/bin/phpunit $PHPUNIT_FLAGS
+
+after_success:
+    - ./vendor/bin/coveralls -v
+
