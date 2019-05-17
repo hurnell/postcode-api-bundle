@@ -3,8 +3,8 @@
 
 A Symfony 4 bundle to access Dutch postcode API at [Postcode API (postcodeapi.nu)](https://www.postcodeapi.nu/).
 
-[![Build Status](https://travis-ci.org/hurnell/postcode-api-bundle.svg?branch=master)](https://travis-ci.org/hurnell/postcode-api-bundle)
-# postcode-api-bundle
+[![Build Status](https://travis-ci.org/hurnell/postcode-api-bundle.svg?branch=master)](https://travis-ci.org/hurnell/postcode-api-bundle)[![Coverage Status](https://coveralls.io/repos/github/hurnell/postcode-api-bundle/badge.svg)](https://coveralls.io/github/hurnell/postcode-api-bundle)
+
 ## Characteristics/Requirements
 Search based on postcode, house number AND house number extra. Note that some combinations of postcode and house number require a house number extra and without this extra value the address does NOT EXIST:
 * ('2011XA', 20, '') is not a valid combination. For this combination  of postcode and house number extra must be 'A', 'RD' or 'ZW'.
@@ -42,27 +42,32 @@ Autowiring is enabled by default so in a controller action (or constructor of ot
 use Hurnell\PostcodeApiBundle\Service\PostcodeApiClient;
 // use Exception classes
 
-public function getPostcodeAction(PostcodeApiClient $client){
-    try {
-        $postcodeModel = $client
-            ->makeRequest(
-                '2011XC,
-                 20,
-                'RD'
-            )
-            ->populatePostcodeModel();
-        $postcodeModel->getStreet();       // Doelstraat
-        $postcodeModel->getCity();         // Haarlem
-        $postcodeModel-> etc etc
-        // json response
-        // return $this->json($postcodeModel->toJson());
-    } catch (InvalidApiResponseException|InvalidPostcodeException $e) {
-        // handle exception
-    } catch (InvalidHouseNumberException $e) {
-        // handle exception
-    } catch (InvalidNumberExtraException $e) {
-        // handle exception
-        $form->get('extra')->addError(new FormError($e->getMessage()));
+class MyController extends AbstractController {
+    
+    public function getPostcodeAction(PostcodeApiClient $client){
+        $form = $this->createForm(PostcodeFormType::class);
+        
+        try {
+            $postcodeModel = $client
+                ->makeRequest(
+                    '2011XC',
+                     20,
+                    'RD'
+                )
+                ->populatePostcodeModel();
+            $postcodeModel->getStreet();       // Doelstraat
+            $postcodeModel->getCity();         // Haarlem
+            // $postcodeModel-> get etc etc
+            // json response
+            // return $this->json($postcodeModel->toJson());
+        } catch (InvalidApiResponseException|InvalidPostcodeException $e) {
+            // handle exception
+        } catch (InvalidHouseNumberException $e) {
+            // handle exception
+        } catch (InvalidNumberExtraException $e) {
+            // handle exception
+            $form->get('extra')->addError(new FormError($e->getMessage()));
+        }
     }
 }
 ```
