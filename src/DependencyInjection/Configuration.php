@@ -10,10 +10,17 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
 
+    /**
+     * @return TreeBuilder
+     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('hurnell_postcode_api');
-        $rootNode = $treeBuilder->getRootNode();
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            $rootNode = $treeBuilder->root('hurnell_postcode_api');
+        }
         $rootNode
             ->children()
             ->scalarNode('api_key')
