@@ -229,12 +229,77 @@ class PostcodeApiClientTest extends PostcodeApiClientTestMock
     public function invalidNumberExtraValueProvider(): array
     {
         return [
-            ['2011XC', 20, '', 'response_postcode_extra.json', '/House number extra must be one of/'],
-            ['2011XC', 20, ' ', 'response_postcode_extra.json', '/House number extra must be one of/'],
-            ['2011XC', 20, 'P', 'response_postcode_extra.json', '/House number extra must be one of/'],
+            ['2011XC', 20, '', 'response_postcode_extra.json', '/House number extra must .*\" or \"/'],
+            ['2011XC', 20, ' ', 'response_postcode_extra.json', '/House number extra must .*\" or \"/'],
+            ['2011XC', 20, 'P', 'response_postcode_extra.json', '/House number extra must .*\" or \"/'],
+            ['2013AH', 80, 'P', 'response_postcode_extra.json', '/House number extra must .*\" or \"/'],
             ['2015AG', 40, 'CX', 'response_postcode_no_extra.json', '/House number extra must be empty/'],
         ];
     }
+
+    /**
+     * @param array $params
+     * @param $dummyResponseFile
+     * @throws InvalidApiResponseException
+     * @throws InvalidHouseNumberException
+     * @throws InvalidPostcodeException
+     * @dataProvider invalidExtraButValidWhenWithoutExtraProvider
+     */
+    public function testInvalidNumberExtraThrowsInvalidNumberExtraExceptionThenAgain(
+        array $params,
+        $dummyResponseFile): void
+    {
+        $this->guzzleExpectsResponse();
+        $this->responseExpectsStatusCode(200);
+        $this->responseExpectsStream();
+        $this->streamReturnsFileContents($dummyResponseFile);
+
+        try {
+
+            $this->postcodeApiClient
+                ->makeRequest(
+                    $params['postcode'],
+                    $params['number'],
+                    $params['extra']
+                )
+                ->populatePostcodeModel();
+        } catch (InvalidNumberExtraException $e) {
+            $model = $this->postcodeApiClient->populatePostcodeModelWithoutExtra();
+            $modelArray = $model->toArray();
+            foreach ($params as $key => $value) {
+                $this->assertArrayHasKey($key, $modelArray);
+                $this->assertEquals($value, $modelArray[$key]);
+                $getter = $this->getGetter($key);
+                $this->assertSame($model->$getter(), $value);
+            }
+            $this->assertJson($model->toJson());
+        }
+    }
+
+    public function invalidExtraButValidWhenWithoutExtraProvider(): array
+    {
+        return [
+            [[
+                'street' => 'Haagweg',
+                'number' => 4,
+                'extra' => 'F12',
+                'postcode' => '2311AA',
+                'city' => 'Leiden',
+                'province' => 'Zuid-Holland'
+            ],
+                'response_postcode_complex.json'],
+            [[
+                'street' => 'Pieter Kiesstraat',
+                'number' => 1,
+                'extra' => 'A',
+                'postcode' => '2013BC',
+                'city' => 'Haarlem',
+                'province' => 'Noord-Holland'
+            ],
+                'response_postcode_complex_single.json'],
+        ];
+    }
+
 
     /**
      * Finally check that a valid request does not throw an error and
@@ -289,6 +354,39 @@ class PostcodeApiClientTest extends PostcodeApiClientTestMock
     public function validPostcodeNumberAndExtraProvider(): array
     {
         return [
+            [[
+                'street' => 'Haagweg',
+                'number' => 4,
+                'extra' => 'E14',
+                'postcode' => '2311AA',
+                'city' => 'Leiden',
+                'province' => 'Zuid-Holland',
+                'geoCoordinates' => ['latitude' => 4.4788946, 'longitude' => 52.1595835]
+            ],
+                '52.1595835,4.4788946',
+                'response_postcode_complex.json'],
+            [[
+                'street' => 'Duvenvoordestraat',
+                'number' => 80,
+                'extra' => '',
+                'postcode' => '2013AH',
+                'city' => 'Haarlem',
+                'province' => 'Noord-Holland',
+                'geoCoordinates' => ['latitude' => 4.6272648, 'longitude' => 52.3871964]
+            ],
+                '52.3871964,4.6272648',
+                'response_postcode_and_extra.json'],
+            [[
+                'street' => 'Duvenvoordestraat',
+                'number' => 80,
+                'extra' => 'A',
+                'postcode' => '2013AH',
+                'city' => 'Haarlem',
+                'province' => 'Noord-Holland',
+                'geoCoordinates' => ['latitude' => 4.6272477, 'longitude' => 52.3872209]
+            ],
+                '52.3872209,4.6272477',
+                'response_postcode_and_extra.json'],
             [[
                 'street' => 'Doelstraat',
                 'number' => 20,

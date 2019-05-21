@@ -159,6 +159,12 @@ class PostcodeModel
         }
     }
 
+    /**
+     * Flattened Geo Coordinates can be used for google maps
+     *
+     * @return string
+     *
+     */
     public function getFlattenedGeoCoordinates(): string
     {
         $flat = '';
