@@ -3,6 +3,7 @@
 namespace Hurnell\PostcodeApiBundle\Service;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\GuzzleException;
 use Hurnell\PostcodeApiBundle\Exception\InvalidHouseNumberException;
@@ -107,6 +108,12 @@ class PostcodeApiClient
             } catch (InvalidJsonException $exception) {
                 throw new InvalidApiResponseException('The API response could not be parsed');
             }
+        } catch (ClientException $e) {
+            $message = 'The API request failed';
+            if (429 === $e->getResponse()->getStatusCode()) {
+                $message = 'The API request failed due to too many requests';
+            }
+            throw new InvalidApiResponseException($message);
         } catch (GuzzleException $e) {
             throw new InvalidApiResponseException('The Guzzle client failed');
         }

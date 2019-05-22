@@ -2,7 +2,9 @@
 
 namespace Hurnell\PostcodeApiBundle\Tests\Service;
 
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\ClientInterface;
@@ -28,6 +30,7 @@ class PostcodeApiClientTestMock extends TestCase
 
     private $guzzleException;
 
+
     public function setUp(): void
     {
         $this->guzzleClient = $this->mockGuzzleClientInterface();
@@ -35,6 +38,7 @@ class PostcodeApiClientTestMock extends TestCase
         $this->response = $this->mockResponseInterface();
         $this->stream = $this->mockStreamInterface();
         $this->guzzleException = $this->mockGuzzleException();
+
     }
 
     /**
@@ -64,6 +68,11 @@ class PostcodeApiClientTestMock extends TestCase
     {
         return new ConnectException('this is a guzzle exception', $this->request);
     }
+    private function mockGuzzleApiException($statusCode): ClientException
+    {
+        $response = new Response($statusCode);
+        return new ClientException('this is a guzzle exception', $this->request, $response);
+    }
 
 
     protected function guzzleExpectsResponse(): void
@@ -78,6 +87,12 @@ class PostcodeApiClientTestMock extends TestCase
         $this->guzzleClient->expects($this->once())
             ->method('send')
             ->willThrowException($this->guzzleException);
+    }
+    protected function guzzleExpectsApiException($statusCode): void
+    {
+        $this->guzzleClient->expects($this->once())
+            ->method('send')
+            ->willThrowException($this->mockGuzzleApiException($statusCode));
     }
 
     /**

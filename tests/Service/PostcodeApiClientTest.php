@@ -300,6 +300,30 @@ class PostcodeApiClientTest extends PostcodeApiClientTestMock
         ];
     }
 
+    public function testPostcodeApiTooManyRequests():void
+    {
+        $this->guzzleExpectsApiException(429);
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('The API request failed due to too many requests');
+        $this->postcodeApiClient
+            ->makeRequest(
+                '2013AH',
+                34,
+                ''
+            );
+    }
+    public function testPostcodeApiTooStatusCodeNotFound():void
+    {
+        $this->guzzleExpectsApiException(404);
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('The API request failed');
+        $this->postcodeApiClient
+            ->makeRequest(
+                '2013AH',
+                34,
+                ''
+            );
+    }
 
     /**
      * Finally check that a valid request does not throw an error and
