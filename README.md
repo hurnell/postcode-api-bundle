@@ -60,18 +60,56 @@ class MyController extends AbstractController {
             $postcodeModel->getCity();         // Haarlem
             // $postcodeModel-> get etc etc
             // json response
-            // return $this->json($postcodeModel->toJson());
+            return $this->json($postcodeModel->toArray());
         } catch (InvalidApiResponseException|InvalidPostcodeException $e) {
             // handle exception
         } catch (InvalidHouseNumberException $e) {
             // handle exception
+            $form->get('number')->addError(new FormError($e->getMessage()));
         } catch (InvalidNumberExtraException $e) {
             // handle exception
-            $form->get('extra')->addError(new FormError($e->getMessage()));
+            $postcodeModel = $client->populatePostcodeModelWithoutExtra();
+            
+            return $this->json(
+                array_merge(
+                    $postcodeModel->toArray(),
+                    ['warning'=>$e->getMessage()]
+                )
+            );
         }
     }
 }
 ```
+
+### Handling InvalidNumberExtraException
+Note that an invalid number extra value is not critical. Furthermore the api is not flawless; there are omissions for house number extra.
+
+The method populatePostcodeModelWithoutExtra exists for these situations:
+
+```php
+try {
+    $postcodeModel = $client
+        ->makeRequest(
+            '2011XC',
+             20,
+            'RD'
+        )
+        ->populatePostcodeModel();
+         // ...
+ } catch (InvalidNumberExtraException $e) {
+ 
+    $postcodeModel = $client->populatePostcodeModelWithoutExtra();
+    
+    return $this->json(
+        array_merge(
+            $postcodeModel->toArray(),
+            ['warning'=>$e->getMessage()]
+        )
+    );
+}
+```
+
+
 
 
 
